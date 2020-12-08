@@ -5,6 +5,9 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from .serializers import PostSerializer
+from .models import Post 
+
 
 # view data without using rest framework
 def view(request):
@@ -19,8 +22,15 @@ def view(request):
 # view data using rest framework
 class rest_view(APIView):
 	def get(self, request, *args, **kwargs):
-		data2 = {
-			'name': 'Anonymous',
-			'age': 78
-		}
-		return Response(data2)
+		qs = Post.objects.all()
+		serializer = PostSerializer(qs, many=True)
+		return Response(serializer.data)
+
+	# to handle post request (data from user)
+	def post(self, request, *args, **kwargs):
+		# pass user data (request.data) to PostSerializer
+		serializer = PostSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors)
