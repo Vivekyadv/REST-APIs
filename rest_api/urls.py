@@ -10,7 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('view/', view, name='view'),
     path('rest-view/', rest_view.as_view(), name='rest-view'),
-	path('apitoken/', obtain_auth_token, name='obtain-token')
+	path('apitoken/', obtain_auth_token, name='obtain-token'),
 
-
+	path('rest-auth/', include('rest_auth.urls')),
 ]
